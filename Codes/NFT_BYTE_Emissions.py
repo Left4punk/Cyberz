@@ -17,9 +17,9 @@ def cyber_hacker_mission(hours):
 
     premium_token = 13650
     mission_rewards = {
-        2: {'BYTE': 16,  'success_multi': 0.6, 'multiplier': 1},
-        4: {'BYTE': 24, 'success_multi': 0.1, 'multiplier': 2},
-        8: {'BYTE': 38, 'success_multi': 0, 'multiplier': 5},
+        2: {'BYTE': 34,  'success_multi': 0.6, 'multiplier': 1},
+        4: {'BYTE': 46, 'success_multi': 0.1, 'multiplier': 2},
+        8: {'BYTE': 78, 'success_multi': 0, 'multiplier': 5},
     }
 
     failure_rewards = {
@@ -55,9 +55,9 @@ def smuggler_mission(hours):
 
     premium_token = 16800
     mission_rewards = {
-        2: {'BYTE': 24,  'success_multi': 0.38, 'multiplier': 1},
-        4: {'BYTE': 36, 'success_multi': 0.11, 'multiplier': 2},
-        8: {'BYTE': 44, 'success_multi': 0.08, 'multiplier': 5},
+        2: {'BYTE': 46,  'success_multi': 0.38, 'multiplier': 1},
+        4: {'BYTE': 78, 'success_multi': 0.11, 'multiplier': 2},
+        8: {'BYTE': 90, 'success_multi': 0.08, 'multiplier': 5},
     }
 
     failure_rewards = {
@@ -93,9 +93,9 @@ def bounty_hunting_mission(hours):
 
     premium_token = 20250
     mission_rewards = {
-        2: {'BYTE': 32,  'success_multi': 0.32, 'multiplier': 1},
-        4: {'BYTE': 42, 'success_multi': 0.06, 'multiplier': 2},
-        8: {'BYTE': 52, 'success_multi': 0.02, 'multiplier': 5},
+        2: {'BYTE': 64,  'success_multi': 0.32, 'multiplier': 1},
+        4: {'BYTE': 86, 'success_multi': 0.06, 'multiplier': 2},
+        8: {'BYTE': 106, 'success_multi': 0.02, 'multiplier': 5},
     }
 
     failure_rewards = {
