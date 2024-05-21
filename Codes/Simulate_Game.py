@@ -5,20 +5,6 @@ import sys
 import matplotlib.pyplot as plt
 
 
-def plot_xp_over_time_all_bots(df, save_path='xp_evolution_all_bots.png'):
-    
-    plt.figure(figsize=(14, 8))
-    for bot_name in df['Bot Name'].unique():
-        bot_data = df[df['Bot Name'] == bot_name]
-        plt.plot(bot_data['Total Play Time'], bot_data['Total XP'], marker='o', label=bot_name)
-    plt.title('XP Evolution')
-    plt.xlabel('Total Time Played')
-    plt.ylabel('XP Total')
-    plt.legend()
-    plt.grid(True)
-    plt.savefig(save_path)
-    plt.close()
-
 def roll_initial_bot_stats ():
 
     while True:
@@ -57,20 +43,14 @@ def generate_bot (bot_name):
     energy = starting_energy + size
     mission_success_boost = 0.005*haste
     mission_crit_chance = 0.005*crit
-    #print ("Initial Bot Stats")
-    #print(f"{'Size':<10}{'Haste':<10}{'Crit':<10}{'Energy':<10}{'Resilience':<12}")
-    #print(f"{size:<10}{haste:<10}{crit:<10}{energy :<10}{resilience:<12}")
-    #print(f"{'Yield Inc.':<10}{'Success Boost':<14}{'Crit Chance':<12}")
-    #print(f"{resource_yield_increase:<10.2f}{mission_success_boost:<14.3f}{mission_crit_chance:<12.3f}")
 
     return {'name': bot_name, 'rarity': rarity, 'level': level, 'total_xp': total_xp, 'total_playtime': total_playtime,'health':health, 'size':size, 'crit':crit, 'haste':haste ,'resilience':resilience,
-            'resource_yield_increase':resource_yield_increase, 'mission_success_boost':mission_success_boost, 'mission_crit_chance':mission_crit_chance, 'starting_energy':starting_energy, 'current_energy':starting_energy}
-    #return rarity, level, health, size, haste, crit, resilience, energy, resource_yield_increase, mission_success_boost, mission_crit_chance, starting_energy
+            'resource_yield_increase':resource_yield_increase, 'mission_success_boost':mission_success_boost, 'mission_crit_chance':mission_crit_chance, 'starting_energy':energy, 'current_energy':energy}
 
 
 def roll_mission_destruction (resilience):
 
-    destruction_number = random.randint(1,10000000000000)
+    destruction_number = random.randint(1,100000)
 
     return True if destruction_number<resilience else False
 
@@ -85,13 +65,6 @@ def data_vaults_mission(hours, resilience,mission_success_boost):
     
     sucess_rate = 0.4 + mission_success_boost
 
-    # Check Bot Destruction
-    if roll_mission_destruction(resilience):
-        bot_status = False
-        return bot_status, False, 0, 0, 0, 0, 0
-    else:
-        bot_status = True
-
     mission_rewards = {
         2: {'silicon_range': (3, 5), 'xp_hour': 50, 'bits_hour': 20, 'junk_hour': (2, 5)},
         4: {'silicon_range': (5, 10), 'xp_hour': 50, 'bits_hour': 20, 'junk_hour': (2, 5)},
@@ -104,9 +77,15 @@ def data_vaults_mission(hours, resilience,mission_success_boost):
         'junk_hour': (0,0),
         'silicon_reward': 0,
     }
-
+    
+    if roll_mission_destruction(resilience):
+        
+        return False, False, 0, 0, 0, 0, 0 ##we check first if the bot is to be destroyed
+    
     mission_status = mission_outcome(sucess_rate)  # Sucess Chance
 
+    # Check Bot Destruction
+    
     energy_cost_hour = 4
 
     if mission_status and hours in mission_rewards:  # Rewards for success mission
@@ -122,18 +101,11 @@ def data_vaults_mission(hours, resilience,mission_success_boost):
     junk_earned = random.randint(*rewards.get('junk_hour', (0, 0))) * hours if 'junk_hour' in rewards else 0
     energy_cost = energy_cost_hour * hours
 
-    return bot_status, mission_status, silicon_reward, xp_earned, bits_earned, energy_cost, junk_earned
+    return True, mission_status, silicon_reward, xp_earned, bits_earned, energy_cost, junk_earned
 
 def refinery_mission(hours, resilience,mission_success_boost):
     
     sucess_rate = 0.5 + mission_success_boost
-
-    # Check Bot Destruction
-    if roll_mission_destruction(resilience):
-        bot_status = False
-        return bot_status, False, 0, 0, 0, 0, 0
-    else:
-        bot_status = True
 
     mission_rewards = {
         2: {'metal_range': (4, 6), 'xp_hour': 40, 'bits_hour': 15, 'junk_hour': (2, 4)},
@@ -148,6 +120,11 @@ def refinery_mission(hours, resilience,mission_success_boost):
         'metal_range': 0,
     }
 
+    # Check Bot Destruction
+    if roll_mission_destruction(resilience):
+        
+        return False, False, 0, 0, 0, 0, 0 ##we check first if the bot is to be destroyed
+    
     mission_status = mission_outcome(sucess_rate)  # Sucess Chance
 
     energy_cost_hour = 3
@@ -165,18 +142,11 @@ def refinery_mission(hours, resilience,mission_success_boost):
     junk_earned = random.randint(*rewards.get('junk_hour', (0, 0))) * hours if 'junk_hour' in rewards else 0
     energy_cost = energy_cost_hour * hours
 
-    return bot_status, mission_status, metal_reward, xp_earned, bits_earned, energy_cost, junk_earned
+    return True, mission_status, metal_reward, xp_earned, bits_earned, energy_cost, junk_earned
 
 
 def plastic_mission(hours, resilience,mission_success_boost):
     
-    # Check Bot Destruction
-    if roll_mission_destruction(resilience):
-        bot_status = False
-        return bot_status, False, 0, 0, 0, 0, 0
-    else:
-        bot_status = True
-
     sucess_rate = 0.6+mission_success_boost
     mission_rewards = {
         2: {'plastic_range': (5, 7), 'xp_hour': 30, 'bits_hour': 10, 'junk_hour': (2, 3)},
@@ -191,6 +161,11 @@ def plastic_mission(hours, resilience,mission_success_boost):
         'plastic_range': 0,
     }
 
+    # Check Bot Destruction
+    if roll_mission_destruction(resilience):
+        
+        return False, False, 0, 0, 0, 0, 0 ##we check first if the bot is to be destroyed
+    
     mission_status = mission_outcome(sucess_rate)  # Sucess/Failure Mission
 
     energy_cost_hour = 2
@@ -208,8 +183,19 @@ def plastic_mission(hours, resilience,mission_success_boost):
     junk_earned = random.randint(*rewards.get('junk_hour', (0, 0))) * hours if 'junk_hour' in rewards else 0
     energy_cost = energy_cost_hour * hours
 
-    return bot_status, mission_status, plastic_reward, xp_earned, bits_earned, energy_cost, junk_earned
+    return True, mission_status, plastic_reward, xp_earned, bits_earned, energy_cost, junk_earned
 
+def mission_final_rewards (bits_earned, material_reward,resource_yield_increase,mission_crit_chance):
+
+    total_bits = round(bits_earned * (1+resource_yield_increase),1)
+    
+    random_chance_mission = random.random()
+
+    crit_mission = 2 if random_chance_mission < mission_crit_chance else 1
+
+    total_material = material_reward * crit_mission
+
+    return total_bits, total_material, crit_mission
 
 def run_mission(bot, mission_time):
     
@@ -219,6 +205,7 @@ def run_mission(bot, mission_time):
     mission_crit_chance = bot['mission_crit_chance']
     bot_name = bot['name']
     ##mission types
+
     missions = [data_vaults_mission, refinery_mission, plastic_mission]
 
     # mission selection
@@ -235,39 +222,21 @@ def run_mission(bot, mission_time):
     # run executed mission
     bot_status, mission_status, resource_reward, xp_earned, bits_earned, energy_cost, junk_earned = selected_mission(mission_time, resilience, mission_success_boost)
      
+    if not bot_status: ##if bot has been destroyed we don't compute the mission rewards
 
+        return False, bot_name, selected_mission_name, resource_name, mission_time, mission_status, resource_reward, xp_earned, bits_earned, energy_cost, junk_earned, 1
+    
     # Final resource rewards
     total_bits, total_material, crit_mission = mission_final_rewards(bits_earned, resource_reward, resource_yield_increase, mission_crit_chance)
-    
-    
-    #print rewards
-    #print (f"Bot sent on mission: {bot_name}")
-    #print(f"Selected Mission: {resource_name}")
-    #print(f"Mission status: {'Éxito' if mission_status else 'Fallo'}")
-    #print(f"Reward {resource_name}: {total_material}")
-    #print(f"XP earned: {xp_earned}, Total Bits: {total_bits}, Energy Cost: {energy_cost}, Junk earned: {junk_earned}, Critical Mission: {crit_mission}")
 
     return bot_status, bot_name, selected_mission_name, resource_name, mission_time, mission_status, total_material, xp_earned, total_bits, energy_cost, junk_earned, crit_mission
 
-
-def mission_final_rewards (bits_earned, material_reward,resource_yield_increase,mission_crit_chance):
-
-    total_bits = round(bits_earned * (1+resource_yield_increase),1)
-    
-    random_chance_mission = random.random()
-
-    crit_mission = 2 if random_chance_mission < mission_crit_chance else 1
-
-    total_material = material_reward * crit_mission
-
-    return total_bits, total_material, crit_mission
 
 def recharge_energy(current_energy, max_energy):
 
     energy_needed = max_energy - current_energy
 
     time_needed = (energy_needed / 20) * 0.5  
-    
     
     new_energy = current_energy + (time_needed * 40) 
 
@@ -341,27 +310,32 @@ def check_level_up(total_xp, total_bits, level, size, haste, crit):
 
         return False, level, size, haste, crit, total_bits  
 
-def check_and_upgrade_rarity(level, rarity, total_junk, total_silicon, total_metal, total_plastic):
+def check_and_upgrade_rarity(level, rarity, total_junk, total_silicon, total_metal, total_plastic,resilience):
     rarity_levels = [5, 10, 15,20]  
     rarity_upgrade_requirements = {
         'common': {'junk_cost': 1465, 'silicon_cost': 230, 'metal_cost': 420, 'plastic_cost': 635},
         'uncommon': {'junk_cost': 2940, 'silicon_cost': 460, 'metal_cost': 845, 'plastic_cost': 1265},
         'rare': {'junk_cost': 0, 'silicon_cost': 1150, 'metal_cost': 2110, 'plastic_cost': 3165},
         'epic': {'junk_cost': 0, 'silicon_cost': 2305, 'metal_cost': 4225, 'plastic_cost': 6335}
-        # add uncommon, rare costs
     }
+
     next_rarity = {
         'common': 'uncommon',
         'uncommon': 'rare',
         'rare': 'epic',
         'epic': 'legendary'
     }
+    resilience_multipliers = {
+        'common':0.95,
+        'uncommon':0.945,
+        'rare':0.945,
+        'epic':0.885
+    }
 
     if level in rarity_levels and rarity in rarity_upgrade_requirements: ##check that we have the correct level + we are not legendary
         
         requirements = rarity_upgrade_requirements[rarity] ##requirements for the current rarity upgrade
 
-        # Comprobar si el bot tiene suficientes recursos
         if (total_junk >= requirements['junk_cost'] and total_silicon >= requirements['silicon_cost'] and 
            total_metal >= requirements['metal_cost'] and total_plastic >= requirements['plastic_cost']):
             
@@ -372,28 +346,101 @@ def check_and_upgrade_rarity(level, rarity, total_junk, total_silicon, total_met
             total_metal -= requirements['metal_cost']
             total_plastic -= requirements['plastic_cost']
 
-            ##print(f"Rarity upgraded to {new_rarity}. Resources deducted. New resources: Junk {junk}, Silicon {silicon}, Metal {metal}, Plastic {plastic}")
-            return new_rarity, total_junk, total_silicon, total_metal, total_plastic
+            if rarity in resilience_multipliers:
+
+                resilience = int(resilience * resilience_multipliers[rarity]) ##we upgrade rarity here
+
+            return new_rarity, total_junk, total_silicon, total_metal, total_plastic, resilience
         else:
-            ##print("Not enough resources to upgrade rarity.")
-            return rarity, total_junk, total_silicon, total_metal, total_plastic
+
+            return rarity, total_junk, total_silicon, total_metal, total_plastic, resilience
     else:
         # we dont have enough level to upgrade or we are at max rarity level
-        return rarity, total_junk, total_silicon, total_metal, total_plastic
+        return rarity, total_junk, total_silicon, total_metal, total_plastic, resilience
 
 
-def check_all_bots_level_5(bots):
+def check_all_bots_level_2(bots):
     
-    all_level_5 = all(bot['level'] >= 5 for bot in bots) ## we check if all bots that are running the missions have reached level 5, if so returns false
+    all_level_2 = all(bot['level'] >= 2 for bot in bots) ## we check if all bots that are running the missions have reached level 5, if so returns false
 
-    return all_level_5
+    return all_level_2
 
 def select_bot_for_leveling(bots):
     
     ## having reached level 5 for all bots, we will select the one that has the largest XP and we'll start leveling it exclusively
 
-    bot_for_leveling = max(bots, key=lambda bot: bot['total_xp'])
+    bot_for_leveling = max(bots, key=lambda bot: bot['level'])
     return bot_for_leveling['name']
+
+
+### functions to generate a new bot with rarity loss when a rare bot gets destroyed
+
+def assign_additional_skill_points (size, haste, crit, additional_points):
+
+    for _ in range (additional_points):
+
+        increase = random.choice(["size","haste","crit"])
+
+        if increase == "size":
+            size +=1
+        
+        elif increase == "hase":
+            haste+=1
+        
+        else:
+            crit +=1
+    
+    return size, haste, crit
+
+def adjust_resilience_for_rarity (resilience, rarity):
+
+    resilience_multipliers = {
+        'common':1.0,
+        'uncommon':0.95,
+        'rare':0.9,
+        'epic':0.85,
+        'legendary':0.75
+    }
+
+    return int(resilience * resilience_multipliers[rarity])
+
+def experience_for_level(level):
+    level_requirements = [
+
+        {"level": 5, "xp_cost": 3200},
+        {"level": 10, "xp_cost": 9185},
+        {"level": 15, "xp_cost": 19665},
+        {"level": 20, "xp_cost": 44215},
+    ]
+    return level_requirements[level-1]["xp_cost"]
+
+def generate_bot_when_destroyed(bot_name, rarity, level, total_playtime):
+
+    health = 100
+    total_xp = experience_for_level(level)
+    base_size, base_haste, base_crit = roll_initial_bot_stats()
+    starting_energy, base_resilience = roll_initial_bot_energy_res()
+
+    # Calculate additional skill points based on the level
+    additional_points = level * 2
+    size, haste, crit = assign_additional_skill_points(base_size, base_haste, base_crit, additional_points)
+
+    # Adjust resilience based on rarity
+    resilience = adjust_resilience_for_rarity(base_resilience, rarity)
+
+    resource_yield_increase = 0.01 * size
+    energy = starting_energy + size
+    mission_success_boost = 0.005 * haste
+    mission_crit_chance = 0.005 * crit
+
+    bot = {
+        'name': bot_name, 'rarity': rarity, 'level': level, 'total_xp': total_xp, 'total_playtime': total_playtime, 
+        'health': health, 'size': size, 'crit': crit, 'haste': haste, 'resilience': resilience,
+        'resource_yield_increase': resource_yield_increase, 'mission_success_boost': mission_success_boost, 
+        'mission_crit_chance': mission_crit_chance, 'starting_energy': energy, 'current_energy': energy
+    }
+
+    return bot
 
 
 def main():
@@ -420,11 +467,11 @@ def main():
     total_silicon = 0
     accumulated_playtime = 0
 
-    all_bots_level_5 = False
+    all_bots_level_2 = False
     bot_to_max_level = None
 
     i = 1
-    # Establece la condición de parada del while aquí, por ejemplo, un número máximo de iteraciones o un nivel mínimo de energía
+
     while i <= 1500:
 
         for bot in list(bots):
@@ -463,12 +510,59 @@ def main():
             
             ## check if the bot has been destroyed
             if not bot_status: 
-                print(f"{bot['name']} ha sido destruido.")
+                
                 bots.remove(bot)
-                new_bot_name = f'bot{bot_name_start}' ##getting bot name
-                new_bot = generate_bot(new_bot_name) ##generating the new bot with the name
+                new_bot_name = f'bot{bot_name_start}'
+                current_rarity = bot['rarity']
+                total_playtime = bot['total_playtime']
+
+                ##define the levels to default to
+                rarity_min_levels = {
+                    'common': 1,
+                    'uncommon':6,
+                    'rare':11,
+                    'epic':16,
+                    'legendary':21
+                }
+
+                if current_rarity != 'common':
+
+                    if random.random() <= 0.3: ## 30% chance to keep the same rarity
+                        
+                        new_rarity = current_rarity
+                        new_level = rarity_min_levels[new_rarity] ##setting up the lowest tier of leveling within that rarity
+                    
+                    else: ## 70% chance to drop 1 rarity tier
+                        
+                        rarity_order = ['common','uncommon','rare','epic','legendary']
+                        rarity_index = rarity_order.index(current_rarity) ##checking which rarity we are in
+
+                        if rarity_index > 1: ## we only care about rare epic and legendary downgrades as if we go from uncommon -> common we just create a new bot and ggz
+                            new_rarity = rarity_order[rarity_index-1] ## we drop 1 rarity tier
+                            new_level = rarity_min_levels[new_rarity] ## setting up the lowest tier of leveling within the new rarity
+                        
+                        else:
+                            new_bot = generate_bot(new_bot_name) ##generating the new bot with the name
+                            bots.append(new_bot)
+                            bot_name_start += 1
+                            continue
+                else:
+                    new_bot = generate_bot(new_bot_name) ##generating the new bot with the name
+                    bots.append(new_bot)
+                    bot_name_start += 1
+                    continue
+                
+                new_bot = generate_bot_when_destroyed(new_bot_name, new_rarity, new_level, total_playtime)
                 bots.append(new_bot)
                 bot_name_start += 1
+                
+                ##we recheck if the destroyed bot was the one to keep maxing or not
+                all_bots_level_2 = check_all_bots_level_2(bots)
+
+                if all_bots_level_2:
+                    bot_to_max_level = select_bot_for_leveling(bots)
+
+                continue
             ## check if the bot has been destroyed
             
             individual_missions.append ([bot_name, selected_mission_name, resource_name, mission_time, mission_status, crit_mission, total_material, xp_earned, final_bits, energy_cost, junk_earned])
@@ -492,7 +586,7 @@ def main():
             ##checking if the bot can level up
             
             ## here we include a logic where we check if all the bots are already leveled up to level 5, we will start only focusing on the selected bot to max level
-            if all_bots_level_5: ## if all bots are level 5, then we focus on the bot to max_level
+            if all_bots_level_2: ## if all bots are level 5, then we focus on the bot to max_level
                 
                 if bot_name == bot_to_max_level:
 
@@ -530,7 +624,7 @@ def main():
 
         
             ##we check if we can upgrade rarity just after level up bc you can get to lvl 5 and be able to upgrade w/o doing any mission
-            bot['rarity'], total_junk, total_silicon, total_metal, total_plastic = check_and_upgrade_rarity(bot['level'], bot['rarity'], total_junk, total_silicon, total_metal, total_plastic)
+            bot['rarity'], total_junk, total_silicon, total_metal, total_plastic, bot['resilience'] = check_and_upgrade_rarity(bot['level'], bot['rarity'], total_junk, total_silicon, total_metal, total_plastic, bot['resilience'])
 
             ##end leveling up the bot
 
@@ -542,11 +636,11 @@ def main():
                                bot['size'], bot['haste'], bot['crit'], bot['resilience'], bot['starting_energy'], bot['resource_yield_increase'], bot['mission_success_boost'], bot['mission_crit_chance'], i])
         
         ## here we check if all our 4 bots have reached level 5, if so we select which bot is going to be max leveled
-        if not all_bots_level_5:
+        if not all_bots_level_2:
 
-            all_bots_level_5 = check_all_bots_level_5(bots)
+            all_bots_level_2 = check_all_bots_level_2(bots)
 
-            if all_bots_level_5:
+            if all_bots_level_2:
 
                 bot_to_max_level = select_bot_for_leveling(bots)
             
@@ -584,7 +678,7 @@ if __name__ == '__main__':
 
     all_runs_data = []
     all_bots_data = []
-    for i in range (1000):
+    for i in range (1):
         print (f'Simulation #{i}')
         df_bot_progression = main()
         #last_emission_rows = df_mission_emissions.iloc[-1:].copy()
