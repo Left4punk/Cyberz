@@ -66,13 +66,13 @@ def data_vaults_mission(hours, resilience,mission_success_boost):
     sucess_rate = 0.4 + mission_success_boost
 
     mission_rewards = {
-        2: {'silicon_range': (3, 5), 'xp_hour': 50, 'bits_hour': 20, 'junk_hour': (2, 5)},
-        4: {'silicon_range': (5, 10), 'xp_hour': 50, 'bits_hour': 20, 'junk_hour': (2, 5)},
-        8: {'silicon_range': (10, 15), 'xp_hour': 50, 'bits_hour': 20, 'junk_hour': (2, 5)},
+        2: {'silicon_range': (4, 6), 'xp_hour': 55, 'bits_hour': 25, 'junk_hour': (2, 5)}, 
+        4: {'silicon_range': (6, 11), 'xp_hour': 55, 'bits_hour': 25, 'junk_hour': (2, 5)},
+        8: {'silicon_range': (11, 16), 'xp_hour': 55, 'bits_hour': 25, 'junk_hour': (2, 5)},
     }
 
     failure_rewards = {
-        'xp_hour': 15,
+        'xp_hour': 18,
         'bits_hour': 10,
         'junk_hour': (0,0),
         'silicon_reward': 0,
@@ -108,13 +108,13 @@ def refinery_mission(hours, resilience,mission_success_boost):
     sucess_rate = 0.5 + mission_success_boost
 
     mission_rewards = {
-        2: {'metal_range': (4, 6), 'xp_hour': 40, 'bits_hour': 15, 'junk_hour': (2, 4)},
-        4: {'metal_range': (7, 12), 'xp_hour': 40, 'bits_hour': 15, 'junk_hour': (2, 4)},
-        8: {'metal_range': (14, 24), 'xp_hour': 40, 'bits_hour': 15, 'junk_hour': (2, 4)},
+        2: {'metal_range': (5, 7), 'xp_hour': 45, 'bits_hour': 20, 'junk_hour': (2, 4)},
+        4: {'metal_range': (8, 12), 'xp_hour': 45, 'bits_hour': 20, 'junk_hour': (2, 4)},
+        8: {'metal_range': (12, 22), 'xp_hour': 45, 'bits_hour': 20, 'junk_hour': (2, 4)},
     }
 
     failure_rewards = {
-        'xp_hour': 12,
+        'xp_hour': 15,
         'bits_hour': 8,
         'junk_hour': (0,0),
         'metal_range': 0,
@@ -149,13 +149,13 @@ def plastic_mission(hours, resilience,mission_success_boost):
     
     sucess_rate = 0.6+mission_success_boost
     mission_rewards = {
-        2: {'plastic_range': (5, 7), 'xp_hour': 30, 'bits_hour': 10, 'junk_hour': (2, 3)},
-        4: {'plastic_range': (9, 14), 'xp_hour': 30, 'bits_hour': 10, 'junk_hour': (2, 3)},
-        8: {'plastic_range': (18, 28), 'xp_hour': 30, 'bits_hour': 10, 'junk_hour': (2, 3)},
+        2: {'plastic_range': (6, 8), 'xp_hour': 35, 'bits_hour': 15, 'junk_hour': (2, 3)},
+        4: {'plastic_range': (10, 15), 'xp_hour': 35, 'bits_hour': 15, 'junk_hour': (2, 3)},
+        8: {'plastic_range': (15, 30), 'xp_hour': 35, 'bits_hour': 15, 'junk_hour': (2, 3)},
     }
 
     failure_rewards = {
-        'xp_hour': 9,
+        'xp_hour': 12,
         'bits_hour': 5,
         'junk_hour': (0,0),
         'plastic_range': 0,
@@ -236,7 +236,7 @@ def recharge_energy(current_energy, max_energy):
 
     energy_needed = max_energy - current_energy
 
-    time_needed = (energy_needed / 20) * 0.5  
+    time_needed = (energy_needed / 20) * 0.5  ## 20energy each 30 mins
     
     new_energy = current_energy + (time_needed * 40) 
 
@@ -259,34 +259,34 @@ def assign_skill_points(size, haste, crit):
             crit += 1
     return size, haste, crit
 
-def check_level_up(total_xp, total_bits, level, size, haste, crit):
+def check_level_up(total_xp, total_bits, level, size, haste, crit, rarity):
 
     level_requirements = [
-        {"level": 1, "xp_cost": 0, "bit_cost": 0},  # Initial Level
-        {"level": 2, "xp_cost": 300, "bit_cost": 300},
-        {"level": 3, "xp_cost": 900, "bit_cost": 650},
-        {"level": 4, "xp_cost": 1800, "bit_cost": 1100},
-        {"level": 5, "xp_cost": 3200, "bit_cost": 1800},
-        {"level": 6, "xp_cost": 4225, "bit_cost": 1975},  
-        {"level": 7, "xp_cost": 5320, "bit_cost": 2200},
-        {"level": 8, "xp_cost": 6495, "bit_cost": 2565},
-        {"level": 9, "xp_cost": 7775, "bit_cost": 3080},
-        {"level": 10, "xp_cost": 9185, "bit_cost": 3745},
-        {"level": 11, "xp_cost": 10765, "bit_cost": 4555},
-        {"level": 12, "xp_cost": 12545, "bit_cost": 5515},
-        {"level": 13, "xp_cost": 14575, "bit_cost": 6620},
-        {"level": 14, "xp_cost": 16925, "bit_cost": 7875},
-        {"level": 15, "xp_cost": 19665, "bit_cost": 9275},
-        {"level": 16, "xp_cost": 22905, "bit_cost": 10825},
-        {"level": 17, "xp_cost": 26780, "bit_cost": 12520},
-        {"level": 18, "xp_cost": 31455, "bit_cost": 14365},
-        {"level": 19, "xp_cost": 37165, "bit_cost": 16355},
-        {"level": 20, "xp_cost": 44215, "bit_cost": 18495},
-        {"level": 21, "xp_cost": 53005, "bit_cost": 20780},
-        {"level": 22, "xp_cost": 64090, "bit_cost": 23215},
-        {"level": 23, "xp_cost": 78205, "bit_cost": 25800},
-        {"level": 24, "xp_cost": 96370, "bit_cost": 28525},
-        {"level": 25, "xp_cost": 120000, "bit_cost": 31400},
+        {"level": 1, "xp_cost": 0, "bit_cost": 0, "rarity": 'common'},  # Initial Level
+        {"level": 2, "xp_cost": 240, "bit_cost": 240, "rarity": 'common'},
+        {"level": 3, "xp_cost": 720, "bit_cost": 520, "rarity": 'common'},
+        {"level": 4, "xp_cost": 1440, "bit_cost": 880, "rarity": 'common'},
+        {"level": 5, "xp_cost": 2560, "bit_cost": 1440, "rarity": 'common'},
+        {"level": 6, "xp_cost": 3380, "bit_cost": 1580, "rarity": 'uncommon'},  
+        {"level": 7, "xp_cost": 4255, "bit_cost": 1760, "rarity": 'uncommon'},
+        {"level": 8, "xp_cost": 5195, "bit_cost": 2050, "rarity": 'uncommon'},
+        {"level": 9, "xp_cost": 6220, "bit_cost": 2465, "rarity": 'uncommon'},
+        {"level": 10, "xp_cost": 7345, "bit_cost": 3000, "rarity": 'uncommon'},
+        {"level": 11, "xp_cost": 8610, "bit_cost": 3645, "rarity": 'rare'},
+        {"level": 12, "xp_cost": 10000, "bit_cost": 4410, "rarity": 'rare'},
+        {"level": 13, "xp_cost": 11660, "bit_cost": 5295, "rarity": 'rare'},
+        {"level": 14, "xp_cost": 13540, "bit_cost": 6300, "rarity": 'rare'},
+        {"level": 15, "xp_cost": 15730, "bit_cost": 7420, "rarity": 'rare'},
+        {"level": 16, "xp_cost": 18325, "bit_cost": 8660, "rarity": 'epic'},
+        {"level": 17, "xp_cost": 21425, "bit_cost": 10000, "rarity": 'epic'},
+        {"level": 18, "xp_cost": 25165, "bit_cost": 11490, "rarity": 'epic'},
+        {"level": 19, "xp_cost": 29730, "bit_cost": 13085, "rarity": 'epic'},
+        {"level": 20, "xp_cost": 35370, "bit_cost": 14795, "rarity": 'epic'},
+        {"level": 21, "xp_cost": 42400, "bit_cost": 16625, "rarity": 'legendary'},
+        {"level": 22, "xp_cost": 51270, "bit_cost": 18570, "rarity": 'legendary'},
+        {"level": 23, "xp_cost": 62565, "bit_cost": 20640, "rarity": 'legendary'},
+        {"level": 24, "xp_cost": 77100, "bit_cost": 22820, "rarity": 'legendary'},
+        {"level": 25, "xp_cost": 96000, "bit_cost": 25120, "rarity": 'legendary'},
     ]
 
     
@@ -294,7 +294,7 @@ def check_level_up(total_xp, total_bits, level, size, haste, crit):
         
         next_level_req = level_requirements[level]  # Check requirements for next level
 
-        if total_xp >= next_level_req["xp_cost"] and total_bits >= next_level_req["bit_cost"]:
+        if total_xp >= next_level_req["xp_cost"] and total_bits >= next_level_req["bit_cost"] and rarity == next_level_req['rarity']:
             
             ## we assign the 2 skill points randomly
             size, haste, crit = assign_skill_points(size, haste, crit)
@@ -311,12 +311,12 @@ def check_level_up(total_xp, total_bits, level, size, haste, crit):
         return False, level, size, haste, crit, total_bits  
 
 def check_and_upgrade_rarity(level, rarity, total_junk, total_silicon, total_metal, total_plastic,resilience):
-    rarity_levels = [5, 10, 15,20]  
+    rarity_levels = [5, 10, 15, 20]  
     rarity_upgrade_requirements = {
-        'common': {'junk_cost': 1465, 'silicon_cost': 230, 'metal_cost': 420, 'plastic_cost': 635},
-        'uncommon': {'junk_cost': 2940, 'silicon_cost': 460, 'metal_cost': 845, 'plastic_cost': 1265},
-        'rare': {'junk_cost': 0, 'silicon_cost': 1150, 'metal_cost': 2110, 'plastic_cost': 3165},
-        'epic': {'junk_cost': 0, 'silicon_cost': 2305, 'metal_cost': 4225, 'plastic_cost': 6335}
+        'common': {'junk_cost': 1000, 'silicon_cost': 150, 'metal_cost': 300, 'plastic_cost': 500},
+        'uncommon': {'junk_cost': 2000, 'silicon_cost': 350, 'metal_cost': 700, 'plastic_cost': 1000},
+        'rare': {'junk_cost': 5000, 'silicon_cost': 800, 'metal_cost': 1600, 'plastic_cost': 2500},
+        'epic': {'junk_cost': 10000, 'silicon_cost': 1700, 'metal_cost': 3400, 'plastic_cost': 5000}
     }
 
     next_rarity = {
@@ -384,7 +384,7 @@ def assign_additional_skill_points (size, haste, crit, additional_points):
         if increase == "size":
             size +=1
         
-        elif increase == "hase":
+        elif increase == "haste":
             haste+=1
         
         else:
@@ -406,15 +406,17 @@ def adjust_resilience_for_rarity (resilience, rarity):
 
 def experience_for_level(level):
     level_requirements = [
-
-        {"level": 5, "xp_cost": 3200},
-        {"level": 10, "xp_cost": 9185},
-        {"level": 15, "xp_cost": 19665},
-        {"level": 20, "xp_cost": 44215},
+        {"level": 6, "xp_cost": 3200},
+        {"level": 11, "xp_cost": 9185},
+        {"level": 16, "xp_cost": 19665},
+        {"level": 21, "xp_cost": 44215},
     ]
-    return level_requirements[level-1]["xp_cost"]
+    level_index = {6: 0, 11: 1, 16: 2, 21: 3}
+    return level_requirements[level_index[level]]["xp_cost"]
 
 def generate_bot_when_destroyed(bot_name, rarity, level, total_playtime):
+    
+    
 
     health = 100
     total_xp = experience_for_level(level)
@@ -439,9 +441,10 @@ def generate_bot_when_destroyed(bot_name, rarity, level, total_playtime):
         'resource_yield_increase': resource_yield_increase, 'mission_success_boost': mission_success_boost, 
         'mission_crit_chance': mission_crit_chance, 'starting_energy': energy, 'current_energy': energy
     }
-
+    print(f"Generating bot with name: {bot_name}, rarity: {rarity}, level: {level}, total_playtime: {total_playtime}, resilience: {resilience}")
     return bot
 
+### functions to generate a new bot with rarity loss when a rare bot gets destroyed
 
 def main():
 
@@ -503,7 +506,8 @@ def main():
                 individual_missions.append ([bot_name,selected_mission_name, resource_name, mission_time, mission_status, crit_mission, total_material, xp_earned, final_bits, energy_cost, junk_earned])
                 accumulated_results.append([bot_name,selected_mission_name, resource_name, mission_time, mission_status, energy_cost, crit_mission,
                         total_plastic, total_metal, total_silicon, bot['total_xp'], total_bits, total_junk, bot['current_energy']])
-                
+                bot_stats.append ([bot['total_playtime'], bot['total_xp'], bot_name, bot['level'], bot['rarity'], bot['health'], 
+                               bot['size'], bot['haste'], bot['crit'], bot['resilience'], bot['starting_energy'], bot['resource_yield_increase'], bot['mission_success_boost'], bot['mission_crit_chance'], i])
                 continue
 
             ## else we compute the mission results
@@ -516,6 +520,7 @@ def main():
                 current_rarity = bot['rarity']
                 total_playtime = bot['total_playtime']
 
+                print (current_rarity)
                 ##define the levels to default to
                 rarity_min_levels = {
                     'common': 1,
@@ -533,34 +538,42 @@ def main():
                         new_level = rarity_min_levels[new_rarity] ##setting up the lowest tier of leveling within that rarity
                     
                     else: ## 70% chance to drop 1 rarity tier
-                        
+                        #print (bot)
                         rarity_order = ['common','uncommon','rare','epic','legendary']
                         rarity_index = rarity_order.index(current_rarity) ##checking which rarity we are in
 
                         if rarity_index > 1: ## we only care about rare epic and legendary downgrades as if we go from uncommon -> common we just create a new bot and ggz
                             new_rarity = rarity_order[rarity_index-1] ## we drop 1 rarity tier
                             new_level = rarity_min_levels[new_rarity] ## setting up the lowest tier of leveling within the new rarity
-                        
+                            #print (bot, new_level, new_rarity)
                         else:
                             new_bot = generate_bot(new_bot_name) ##generating the new bot with the name
                             bots.append(new_bot)
                             bot_name_start += 1
+                            bot_stats.append ([bot['total_playtime'], bot['total_xp'], bot_name, bot['level'], bot['rarity'], bot['health'], 
+                               bot['size'], bot['haste'], bot['crit'], bot['resilience'], bot['starting_energy'], bot['resource_yield_increase'], bot['mission_success_boost'], bot['mission_crit_chance'], i])
+                
+                            bot_to_max_level = select_bot_for_leveling(bots)
                             continue
                 else:
                     new_bot = generate_bot(new_bot_name) ##generating the new bot with the name
                     bots.append(new_bot)
                     bot_name_start += 1
+                    bot_stats.append ([bot['total_playtime'], bot['total_xp'], bot_name, bot['level'], bot['rarity'], bot['health'], 
+                               bot['size'], bot['haste'], bot['crit'], bot['resilience'], bot['starting_energy'], bot['resource_yield_increase'], bot['mission_success_boost'], bot['mission_crit_chance'], i])
+
+                    bot_to_max_level = select_bot_for_leveling(bots)
                     continue
                 
                 new_bot = generate_bot_when_destroyed(new_bot_name, new_rarity, new_level, total_playtime)
                 bots.append(new_bot)
                 bot_name_start += 1
-                
+                bot_stats.append ([bot['total_playtime'], bot['total_xp'], bot_name, bot['level'], bot['rarity'], bot['health'], 
+                               bot['size'], bot['haste'], bot['crit'], bot['resilience'], bot['starting_energy'], bot['resource_yield_increase'], bot['mission_success_boost'], bot['mission_crit_chance'], i])
                 ##we recheck if the destroyed bot was the one to keep maxing or not
-                all_bots_level_2 = check_all_bots_level_2(bots)
+                
 
-                if all_bots_level_2:
-                    bot_to_max_level = select_bot_for_leveling(bots)
+                bot_to_max_level = select_bot_for_leveling(bots)
 
                 continue
             ## check if the bot has been destroyed
@@ -586,11 +599,12 @@ def main():
             ##checking if the bot can level up
             
             ## here we include a logic where we check if all the bots are already leveled up to level 5, we will start only focusing on the selected bot to max level
-            if all_bots_level_2: ## if all bots are level 5, then we focus on the bot to max_level
+
+            if all_bots_level_2: ## if all bots are level 2, then we focus on the bot to max_level
                 
                 if bot_name == bot_to_max_level:
 
-                    can_level_up, new_level, new_size, new_haste, new_crit, updated_total_bits = check_level_up(bot['total_xp'], total_bits, bot['level'], bot['size'], bot['haste'], bot['crit'])
+                    can_level_up, new_level, new_size, new_haste, new_crit, updated_total_bits = check_level_up(bot['total_xp'], total_bits, bot['level'], bot['size'], bot['haste'], bot['crit'],bot['rarity'])
 
                     if can_level_up: ## if the bot that we are maxing can level up we change its parameters
 
@@ -605,9 +619,9 @@ def main():
 
                         total_bits = updated_total_bits ## substracting the bits
 
-            else: ##if not all bots are up to level 5 we to keep leveling all
+            else: ##if not all bots are up to level 2 we to keep leveling all
                     
-                can_level_up, new_level, new_size, new_haste, new_crit, updated_total_bits = check_level_up(bot['total_xp'], total_bits, bot['level'], bot['size'], bot['haste'], bot['crit'])
+                can_level_up, new_level, new_size, new_haste, new_crit, updated_total_bits = check_level_up(bot['total_xp'], total_bits, bot['level'], bot['size'], bot['haste'], bot['crit'],bot['rarity'])
 
                 if can_level_up: ## if the bot that we are maxing can level up we change its parameters
 
