@@ -441,7 +441,7 @@ def generate_bot_when_destroyed(bot_name, rarity, level, total_playtime):
         'resource_yield_increase': resource_yield_increase, 'mission_success_boost': mission_success_boost, 
         'mission_crit_chance': mission_crit_chance, 'starting_energy': energy, 'current_energy': energy
     }
-    print(f"Generating bot with name: {bot_name}, rarity: {rarity}, level: {level}, total_playtime: {total_playtime}, resilience: {resilience}")
+    #print(f"Generating bot with name: {bot_name}, rarity: {rarity}, level: {level}, total_playtime: {total_playtime}, resilience: {resilience}")
     return bot
 
 ### functions to generate a new bot with rarity loss when a rare bot gets destroyed
@@ -520,7 +520,6 @@ def main():
                 current_rarity = bot['rarity']
                 total_playtime = bot['total_playtime']
 
-                print (current_rarity)
                 ##define the levels to default to
                 rarity_min_levels = {
                     'common': 1,
@@ -692,19 +691,20 @@ if __name__ == '__main__':
 
     all_runs_data = []
     all_bots_data = []
-    for i in range (1):
+    for i in range (100000):
         print (f'Simulation #{i}')
         df_bot_progression = main()
         #last_emission_rows = df_mission_emissions.iloc[-1:].copy()
-        last_four_rows = df_bot_progression.iloc[-4:].copy()
+        #last_four_rows = df_bot_progression.iloc[-4:].copy()
+        highest_level_row = df_bot_progression.loc[df_bot_progression['Level'].idxmax()].copy()
         #df_mission_emissions['Simulation Run'] = i+1
-        df_bot_progression['Simulation Run'] = i+1
+        highest_level_row['Simulation Run'] = i+1
 
         #all_runs_data.append(last_emission_rows)
-        all_bots_data.append(df_bot_progression)
+        all_runs_data.append(highest_level_row)
     
     #final_emissions_df = pd.concat(all_runs_data, ignore_index=True)
-    final_bots_df = pd.concat(all_bots_data, ignore_index=True)
+    final_bots_df = pd.DataFrame(all_runs_data)
     # Store DF
     #final_emissions_df.to_csv('full_mission_emissions_results_1000_runs.csv', index=False)
     final_bots_df.to_csv('final_bot_results_1000_runs.csv', index=False)
