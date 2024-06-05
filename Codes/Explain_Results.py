@@ -44,8 +44,8 @@ std_BYTE_per_hour = df['$BYTE/h'].std()
 plt.legend([f'Mean: {mean_BYTE_per_hour:.2f}, Standard Deviation: {std_BYTE_per_hour:.2f}'], loc='upper right')
 #plt.legend([f'Mean: {mean_Junk_per_hour:.2f}, Standard Deviation: {std_Junk_per_hour:.2f}'], loc='upper right')
 
-plt.xlabel('Junk Emission per hour')
-plt.title('Distribution of $Junk/Hour after 1000 simulations of 1500 missions')
+plt.xlabel('$BYTE Emission per hour')
+plt.title('Distribution of $BYTE/Hour after 1000 simulations of 1000000 missions')
 plt.grid(False)
 
 plt.savefig('BYTE_per_hour.png')
