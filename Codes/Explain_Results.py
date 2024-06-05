@@ -21,7 +21,7 @@ df = pd.read_csv('nft_emissions_results.csv')
 plt.figure(figsize=(10, 6))
 #sns.boxplot(x=df['XP per Hour'], color="lightblue")
 
-sns.boxplot(x=df['$BYTE/h'], color="lightblue")
+sns.boxplot(x=df['XP/h'], color="lightblue")
 
 # Calculating mean & standard dev
 
@@ -37,15 +37,15 @@ sns.boxplot(x=df['$BYTE/h'], color="lightblue")
 #mean_Bit_per_hour = df['BIT per Hour'].mean()
 #std_Bit_per_hour = df['BIT per Hour'].std()
 
-mean_BYTE_per_hour = df['$BYTE/h'].mean()
-std_BYTE_per_hour = df['$BYTE/h'].std()
+mean_BYTE_per_hour = df['XP/h'].mean()
+std_BYTE_per_hour = df['XP/h'].std()
 
 # Adding Legend con w Mean and Std
 plt.legend([f'Mean: {mean_BYTE_per_hour:.2f}, Standard Deviation: {std_BYTE_per_hour:.2f}'], loc='upper right')
 #plt.legend([f'Mean: {mean_Junk_per_hour:.2f}, Standard Deviation: {std_Junk_per_hour:.2f}'], loc='upper right')
 
-plt.xlabel('$BYTE Emission per hour')
-plt.title('Distribution of $BYTE/Hour after 1000 simulations of 1000000 missions')
+plt.xlabel('XP Emission per hour')
+plt.title('Distribution of XP/hour after 1000 simulations of 1000000 missions')
 plt.grid(False)
 
-plt.savefig('BYTE_per_hour.png')
+plt.savefig('XP_per_hour.png')
